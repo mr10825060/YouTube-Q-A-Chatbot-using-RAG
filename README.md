@@ -148,8 +148,8 @@ The project currently runs inside Google Colab as an interactive chatbot.
 ## 1. Clone the Repository
 
 ```bash
-git clone <your-repository-link>
-```
+git clone ```https://github.com/mr10825060/YouTube-Q-A-Chatbot-using-RAG
+
 
 ## 2. Install Required Libraries
 
