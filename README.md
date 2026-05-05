@@ -1,216 +1,187 @@
-# YouTube Chatbot using LangChain: Building a RAG System
 
-## Summary
 
-A Retrieval-Augmented Generation (RAG) chatbot that enables users to interact with YouTube videos in real-time, generate summaries, and ask context-aware questions directly from video transcripts.
+#  YouTube Chatbot using LangChain (RAG System)
+
+##  Summary
+
+This project is a simple chatbot that lets you talk to YouTube videos.
+You can paste a video ID, ask questions, and get answers based only on what is spoken in the video.
+
+It uses a Retrieval-Augmented Generation (RAG) pipeline built with LangChain and OpenAI.
 
 ---
 
 # Overview
 
-This project demonstrates the implementation of a Retrieval-Augmented Generation (RAG) architecture using LangChain and OpenAI models. The application extracts YouTube video transcripts, converts them into searchable vector embeddings, and uses a Large Language Model (LLM) to answer user questions based only on the video content.
+Long YouTube videos are hard to go through when you just need specific information.
 
-The system helps users quickly understand long-form video content such as podcasts, interviews, lectures, and tutorials without watching the entire video.
+This project solves that by turning a video into a searchable knowledge base.
 
----
+It:
 
-# Problem Statement
+* pulls the transcript from YouTube
+* breaks it into chunks
+* converts it into embeddings
+* stores it in a vector database (FAISS)
+* uses an LLM to answer questions from that content
 
-Long YouTube videos often contain valuable information, but finding specific insights within hours of content can be difficult and time-consuming.
-
-This project solves that problem by allowing users to:
-
-* Ask questions directly about a video
-* Generate concise summaries
-* Get point-wise explanations
-* Retrieve important insights instantly
-
-The chatbot responds using only the transcript context, reducing hallucinations and improving answer relevance.
+So instead of watching the full video, you can just ask questions.
 
 ---
 
-# Dataset
+#  Problem it solves
 
-The dataset used in this project is dynamic and generated from YouTube video transcripts.
+Most YouTube videos (lectures, podcasts, tutorials) are long.
 
-The transcripts are fetched using the YouTube Transcript API and include:
+Finding one small answer means:
 
-* Video text content
-* Time-stamps
-* Sequential transcript segments
+* scrubbing through the video
+* guessing timestamps
+* wasting time
 
-These transcript chunks are processed and converted into embeddings for semantic search and retrieval.
+This chatbot removes that problem by letting you ask directly:
+
+* “Summarize this video”
+* “What is the main idea?”
+* “Explain this topic”
 
 ---
 
-# Tools and Technologies
-
-### Framework
+#  Tools used
 
 * LangChain
-
-### LLM & Embeddings
-
-* OpenAI GPT Models
-* OpenAI Embeddings
-
-### Data Fetching
-
+* OpenAI (GPT + Embeddings)
 * YouTube Transcript API
-
-### Vector Database
-
-* FAISS
-
-### Text Processing
-
-* RecursiveCharacterTextSplitter
-
-### Development Environment
-
-* Google Colab
+* FAISS (vector database)
 * Python
-
-### Suggested Frontend/UI
-
-* Streamlit
-* HTML/CSS/JavaScript
-* Chrome Extension Integration
+* Jupyter Notebook
 
 ---
 
-# Methods
+#  How it works
 
-The project follows a standard RAG pipeline implemented using LangChain Expression Language (LCEL).
+### 1. Get transcript
 
-## 1. Indexing
+We extract the transcript from a YouTube video using its ID.
 
-* Fetch YouTube transcript using Video ID
-* Split transcript into smaller chunks
-* Generate embeddings using OpenAI Embeddings
-* Store embeddings in FAISS vector database
+### 2. Split text
 
-## 2. Retrieval
+The transcript is split into smaller overlapping chunks so it’s easier to search.
 
-* Perform similarity search on the vector store
-* Retrieve the most relevant transcript chunks based on user queries
+### 3. Convert to embeddings
 
-## 3. Augmentation
+Each chunk is converted into vectors using OpenAI embeddings.
 
-* Combine retrieved chunks into contextual input
-* Use a prompt template instructing the LLM to answer strictly from context
+### 4. Store in FAISS
 
-## 4. Generation
+All vectors are stored in a FAISS index for fast similarity search.
 
-* Send augmented prompt to the OpenAI model
-* Generate context-aware responses
+### 5. Retrieve relevant context
 
-## 5. Chaining
+When a question is asked, we find the most relevant chunks.
 
-* Combine retrieval and generation using LangChain LCEL
-* Use RunnableParallel for parallel context and query handling
+### 6. Generate answer
+
+The LLM answers using only the retrieved context.
 
 ---
 
-# Key Insights
+#  Features
 
-* The YouTube Transcript API provided more reliable transcript extraction than default LangChain loaders.
-* The chatbot supports multilingual transcripts, including Hindi and other languages.
-* Using vector embeddings significantly improves semantic retrieval quality.
-* Parallel chains improve performance by efficiently managing context and queries simultaneously.
-* Context-restricted prompting helps reduce hallucinated answers.
-
----
-
-# Dashboard / Model / Output
-
-The project currently runs inside Google Colab as an interactive chatbot.
-
-### Features
-
-* Real-time question answering
-* Bullet-point video summaries
-* Topic-specific explanations
-* Context-aware responses
-* Fallback responses such as “I don’t know” when information is unavailable
-
-### Example Use Cases
-
-* Summarizing podcasts
-* Extracting AI or technology insights
-* Understanding lectures quickly
-* Retrieving specific moments from long videos
+* Ask questions about any YouTube video
+* Get instant summaries
+* Context-based answers only (no guessing)
+* Works inside Jupyter Notebook
+* Handles long videos easily
 
 ---
 
-# How to Run This Project
+#  How to run
 
-## 1. Clone the Repository
+## 1. Clone the repo
 
 ```bash
-git clone ```https://github.com/mr10825060/YouTube-Q-A-Chatbot-using-RAG
+git clone https://github.com/mr10825060/YouTube-Q-A-Chatbot-using-RAG
+cd YouTube-Q-A-Chatbot-using-RAG
+```
 
+---
 
-## 2. Install Required Libraries
+## 2. Install dependencies
 
 ```bash
-pip install langchain openai faiss-cpu youtube-transcript-api
-```
-
-## 3. Add OpenAI API Key
-
-```python
-OPENAI_API_KEY = "your_api_key"
-```
-
-## 4. Enter YouTube Video ID
-
-Example:
-
-```python
-video_id = "xxxxxxxxxxx"
-```
-
-## 5. Run the Notebook
-
-* Execute transcript indexing cells
-* Run vector embedding generation
-* Start asking questions using:
-
-```python
-main_chain.invoke("Your Question")
+pip install langchain langchain-community langchain-openai faiss-cpu youtube-transcript-api tiktoken openai
 ```
 
 ---
 
-# Results & Conclusion
+## 3. Open Jupyter Notebook
 
-The project successfully demonstrates a functional RAG-based chatbot capable of understanding and interacting with YouTube video content.
+```bash
+jupyter notebook
+```
 
-The system:
-
-* Improves accessibility of long-form video content
-* Enables efficient information retrieval
-* Demonstrates practical use of LangChain and vector databases
-* Provides accurate context-aware responses
+Then open the `.ipynb` file you uploaded.
 
 ---
 
-# Future Enhancements
+## 4. Add OpenAI key
 
-Future improvements may include:
-
-* Streamlit web application deployment
-* Agentic RAG implementation
-* Multimodal capabilities
-* RAGAS evaluation metrics
-* Hybrid search and re-ranking
-* Memory-enabled conversational chatbot
-* Chrome extension integration
+```python
+import os
+os.environ["OPENAI_API_KEY"] = "your_api_key"
+```
 
 ---
 
-# Author
+## 5. Run step by step
+
+Run all cells in order:
+
+* transcript extraction
+* chunking
+* embeddings
+* FAISS index
+* retriever
+* chatbot chain
+
+---
+
+## 6. Ask questions
+
+```python
+main_chain.invoke({
+    "question": "Summarize the video"
+})
+```
+
+---
+
+#  What this project shows
+
+This is basically a working RAG pipeline applied to real YouTube content.
+
+It shows:
+
+* how retrieval + LLMs work together
+* how vector databases improve search
+* how to build a real-world AI chatbot
+
+---
+
+#  Future improvements
+
+* Add Streamlit UI
+* Support multiple videos
+* Add memory (chat history)
+* Show timestamps from video
+* Deploy online
+
+---
+
+#  Author
 
 Manika Rajput
+
+---
 
